@@ -1,78 +1,151 @@
 // js/auth.js
 
-function isGmail(email) {
+// Simple email format check (front-end cannot 100% prove an email exists)
+function isValidEmail(email) {
   const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return pattern.test(email) && email.toLowerCase().endsWith("@gmail.com");
+  return pattern.test(email);
 }
 
-async function saveUser(user) {
+// Save user profile in Firestore
+async function saveUser(user, extraName) {
   const ref = db.collection("users").doc(user.uid);
   const snap = await ref.get();
 
   if (!snap.exists) {
     await ref.set({
       uid: user.uid,
-      name: user.displayName || "",
+      name: extraName || user.displayName || "",
       email: user.email,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
   }
 }
 
-async function googleLogin() {
-  const provider = new firebase.auth.GoogleAuthProvider();
+// ---------- SIGN UP WITH EMAIL & PASSWORD ----------
+async function handleSignup(event) {
+  event.preventDefault();
+
+  const nameEl = document.getElementById("signupName");
+  const emailEl = document.getElementById("signupEmail");
+  const passEl = document.getElementById("signupPassword");
+  const errorBox = document.getElementById("signupError");
+
+  const name = nameEl.value.trim();
+  const email = emailEl.value.trim();
+  const password = passEl.value;
+
+  errorBox.textContent = "";
+
+  if (!name) {
+    errorBox.textContent = "Please enter your full name.";
+    return;
+  }
+
+  if (!isValidEmail(email)) {
+    errorBox.textContent = "Please enter a valid email address.";
+    return;
+  }
+
+  if (password.length < 6) {
+    errorBox.textContent = "Password must be at least 6 characters.";
+    return;
+  }
 
   try {
-    const res = await auth.signInWithPopup(provider);
-    const user = res.user;
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
+    await cred.user.updateProfile({ displayName: name });
+    await saveUser(cred.user, name);
 
-    if (!user.email || !isGmail(user.email)) {
-      alert("Please login with a valid Gmail address.");
-      await auth.signOut();
-      return;
-    }
-
-    await saveUser(user);
+    // logged in → go to home
     window.location.href = "home.html";
   } catch (err) {
     console.error(err);
-    alert("Login failed. Please try again.");
+    errorBox.textContent = err.message || "Signup failed. Try again.";
   }
 }
 
+// ---------- LOGIN WITH EMAIL & PASSWORD ----------
+async function handleLogin(event) {
+  event.preventDefault();
+
+  const emailEl = document.getElementById("loginEmail");
+  const passEl = document.getElementById("loginPassword");
+  const errorBox = document.getElementById("loginError");
+
+  const email = emailEl.value.trim();
+  const password = passEl.value;
+
+  errorBox.textContent = "";
+
+  if (!isValidEmail(email)) {
+    errorBox.textContent = "Please enter a valid email address.";
+    return;
+  }
+
+  if (!password) {
+    errorBox.textContent = "Please enter your password.";
+    return;
+  }
+
+  try {
+    const cred = await auth.signInWithEmailAndPassword(email, password);
+    await saveUser(cred.user);
+
+    window.location.href = "home.html";
+  } catch (err) {
+    console.error(err);
+    errorBox.textContent = "Invalid email or password.";
+  }
+}
+
+// ---------- AUTH GUARD ----------
 function requireAuth() {
   auth.onAuthStateChanged((user) => {
     const path = window.location.pathname;
-    const page = path.substring(path.lastIndexOf("/") + 1);
+    const page = path.substring(path.lastIndexOf("/") + 1) || "index.html";
 
     if (!user) {
-      if (page !== "" && page !== "index.html" && page !== "signup.html") {
+      // Not logged in → kick out of all pages except login/signup
+      if (page !== "index.html" && page !== "signup.html") {
         window.location.href = "index.html";
       }
     } else {
-      // if already logged in and on auth page → send to home
-      if (page === "" || page === "index.html" || page === "signup.html") {
+      // Already logged in but on auth pages → send to home
+      if (page === "index.html" || page === "signup.html") {
         window.location.href = "home.html";
       }
+
       const emailEl = document.getElementById("currentUserEmail");
       if (emailEl) emailEl.textContent = user.email;
     }
   });
 }
 
+// ---------- LOGOUT ----------
 function setupLogout() {
   const btn = document.getElementById("logoutBtn");
   if (!btn) return;
+
   btn.addEventListener("click", async () => {
     await auth.signOut();
     window.location.href = "index.html";
   });
 }
 
+// ---------- INIT LISTENERS ----------
 document.addEventListener("DOMContentLoaded", () => {
   setupLogout();
-  const googleBtn = document.getElementById("googleLoginBtn");
-  if (googleBtn) {
-    googleBtn.addEventListener("click", googleLogin);
+
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) {
+    loginForm.addEventListener("submit", handleLogin);
   }
+
+  const signupForm = document.getElementById("signupForm");
+  if (signupForm) {
+    signupForm.addEventListener("submit", handleSignup);
+  }
+
+  // Start auth guard on every page
+  requireAuth();
 });
