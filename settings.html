@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grublit – Settings</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="settings">
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand" onclick="window.location.href='home.html'" style="cursor:pointer;">
+          <div class="brand-icon">G</div>
+          Grublit
+        </div>
+        <div class="nav-search">
+          <span>🔍</span>
+          <input type="text" placeholder="Search stationery…" onfocus="window.location.href='search.html'" />
+        </div>
+        <div class="nav-actions">
+          <span id="currentUserEmail" style="font-size:12px;"></span>
+          <button id="logoutBtn" class="btn btn-outline">Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="sidebar-layout section">
+        <aside class="sidebar-card">
+          <div style="margin-bottom:16px;">
+            <strong>Settings</strong>
+          </div>
+          <div class="sidebar-menu">
+            <button onclick="window.location.href='profile.html'">Profile</button>
+            <button class="active">Notifications</button>
+          </div>
+        </aside>
+
+        <section class="content-card">
+          <h2 class="section-title">Notifications</h2>
+          <p style="font-size:13px; color:#6b7280; margin:8px 0 16px;">
+            Manage how you receive updates from us.
+          </p>
+
+          <form id="notifForm">
+            <h3 style="margin-bottom:8px;">Push Notifications</h3>
+            <label>
+              <input type="checkbox" id="orderUpdates" checked />
+              Order Updates
+            </label><br />
+            <label>
+              <input type="checkbox" id="promotions" checked />
+              Promotions & Offers
+            </label><br />
+            <label>
+              <input type="checkbox" id="appAnnouncements" checked />
+              App Announcements
+            </label>
+
+            <h3 style="margin:16px 0 8px;">Email Notifications</h3>
+            <label>
+              <input type="checkbox" id="orderSummaries" checked />
+              Order Summaries
+            </label><br />
+            <label>
+              <input type="checkbox" id="weeklyNewsletter" checked />
+              Weekly Newsletter
+            </label>
+
+            <div style="margin-top:16px;">
+              <button type="submit" class="btn btn-primary">
+                Save Changes
+              </button>
+            </div>
+          </form>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>© 2024 Grublit.</div>
+        <div>
+          Contact:
+          <a href="mailto:varadmhatre67@gmail.com">varadmhatre67@gmail.com</a>
+          · 8806606371
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

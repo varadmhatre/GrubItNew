@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grublit – Seller Dashboard</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="seller">
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand" onclick="window.location.href='home.html'" style="cursor:pointer;">
+          <div class="brand-icon">G</div>
+          Grublit
+        </div>
+        <div class="nav-search">
+          <span>🔍</span>
+          <input type="text" placeholder="Search stationery…" onfocus="window.location.href='search.html'" />
+        </div>
+        <div class="nav-actions">
+          <span id="currentUserEmail" style="font-size:12px;"></span>
+          <button class="icon-pill" onclick="window.location.href='cart.html'">🛒</button>
+          <button id="logoutBtn" class="btn btn-outline">Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <div class="sidebar-layout section">
+        <aside class="sidebar-card">
+          <div style="margin-bottom:16px;">
+            <strong>Seller</strong>
+          </div>
+          <div class="sidebar-menu">
+            <button class="active">Products</button>
+            <button onclick="window.location.href='home.html'">Back to Customer View</button>
+          </div>
+        </aside>
+
+        <section class="content-card">
+          <h2 class="section-title">My Products</h2>
+          <p style="font-size:13px; color:#6b7280; margin:8px 0 16px;">
+            Add items. Only <strong>Published</strong> items are visible to customers worldwide.
+          </p>
+
+          <form id="productForm" style="margin-bottom:20px;">
+            <div class="form-group">
+              <label class="form-label" for="pTitle">Title</label>
+              <div class="input-shell">
+                <input id="pTitle" type="text" placeholder="e.g. Classic Gel Ink Pen" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pPrice">Price (₹)</label>
+              <div class="input-shell">
+                <input id="pPrice" type="number" step="0.01" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pCategory">Category</label>
+              <div class="input-shell">
+                <input id="pCategory" type="text" placeholder="Pens, Notebooks, etc." />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pImage">Image URL</label>
+              <div class="input-shell">
+                <input id="pImage" type="text" placeholder="https://…" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="pDesc">Description</label>
+              <div class="input-shell">
+                <input id="pDesc" type="text" placeholder="Short description" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">
+              Add Product & Publish
+            </button>
+          </form>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="sellerProductsBody">
+              <!-- Filled by JS -->
+            </tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>© 2024 Grublit.</div>
+        <div>
+          Contact:
+          <a href="mailto:varadmhatre67@gmail.com">varadmhatre67@gmail.com</a>
+          · 8806606371
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grublit – Home</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="home">
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand">
+          <div class="brand-icon">G</div>
+          Grublit
+        </div>
+        <form class="nav-search" onsubmit="event.preventDefault(); window.location.href='search.html';">
+          <span>🔍</span>
+          <input
+            type="text"
+            placeholder="Search for pens, notes, notebooks…"
+          />
+        </form>
+        <div class="nav-actions">
+          <span id="currentUserEmail" style="font-size:12px;"></span>
+          <button class="icon-pill" onclick="window.location.href='seller.html'">
+            🧾
+          </button>
+          <button class="icon-pill" onclick="window.location.href='cart.html'">
+            🛒
+          </button>
+          <button id="logoutBtn" class="btn btn-outline">Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="hero">
+        <div class="hero-banner">
+          <div>
+            <div class="hero-title">Your favorite stationery, delivered fast.</div>
+            <p class="hero-subtitle">
+              From pens to planners, get it in minutes.
+            </p>
+          </div>
+          <div class="hero-cta">
+            <button class="btn btn-primary" onclick="window.location.href='search.html'">
+              Shop Now
+            </button>
+          </div>
+        </div>
+        <div class="hero-side">
+          <img
+            src="https://images.pexels.com/photos/4144222/pexels-photo-4144222.jpeg"
+            alt="Desk stationery"
+          />
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Shop by Category</h2>
+        </div>
+        <div class="category-row">
+          <div class="category-card" onclick="window.location.href='search.html'">
+            <img src="https://images.pexels.com/photos/4792728/pexels-photo-4792728.jpeg" alt="Writing tools" />
+            <span>Writing Tools</span>
+          </div>
+          <div class="category-card" onclick="window.location.href='search.html'">
+            <img src="https://images.pexels.com/photos/4144221/pexels-photo-4144221.jpeg" alt="Notebooks" />
+            <span>Paper &amp; Notebooks</span>
+          </div>
+          <div class="category-card" onclick="window.location.href='search.html'">
+            <img src="https://images.pexels.com/photos/3846236/pexels-photo-3846236.jpeg" alt="Desk accessories" />
+            <span>Desk Accessories</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">Bestsellers</h2>
+        </div>
+        <div id="bestsellerList" class="products-grid"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>
+          © 2024 Grublit. Your favorite stationery, delivered fast.
+        </div>
+        <div>
+          Contact:
+          <a href="mailto:varadmhatre67@gmail.com">varadmhatre67@gmail.com</a>
+          · 8806606371
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

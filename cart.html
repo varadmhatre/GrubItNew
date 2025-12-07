@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Grublit – Cart</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body data-page="cart">
+  <div class="page-wrapper">
+    <header class="header">
+      <div class="header-inner">
+        <div class="brand" onclick="window.location.href='home.html'" style="cursor:pointer;">
+          <div class="brand-icon">G</div>
+          Grublit
+        </div>
+        <div class="nav-search">
+          <span>🔍</span>
+          <input type="text" placeholder="Search stationery…" onfocus="window.location.href='search.html'" />
+        </div>
+        <div class="nav-actions">
+          <span id="currentUserEmail" style="font-size:12px;"></span>
+          <button id="logoutBtn" class="btn btn-outline">Log Out</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="cart-layout section">
+        <div class="cart-box">
+          <h2 class="section-title">My Cart</h2>
+          <div id="cartItems"></div>
+        </div>
+        <div class="summary-box">
+          <h2 class="section-title">Order Summary</h2>
+          <div id="cartSummary"></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <div>© 2024 Grublit.</div>
+        <div>
+          Contact:
+          <a href="mailto:varadmhatre67@gmail.com">varadmhatre67@gmail.com</a>
+          · 8806606371
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/firebase-config.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
