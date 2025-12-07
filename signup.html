@@ -9,21 +9,60 @@
   <div class="page-wrapper">
     <main class="main-content">
       <div class="auth-shell">
-        <div class="auth-panel" style="grid-column: span 2; text-align:center;">
-          <h1 class="auth-title">Create an Account</h1>
-          <p class="auth-subtitle">
+        <div class="auth-panel" style="grid-column: span 2; max-width:420px; margin:0 auto;">
+          <h1 class="auth-title" style="text-align:center;">Create an Account</h1>
+          <p class="auth-subtitle" style="text-align:center;">
             Get your favorite stationery delivered in minutes.
           </p>
 
-          <div style="max-width:360px;margin:0 auto;">
-            <button id="googleLoginBtn" class="btn btn-primary">
-              Sign Up with Google
+          <form id="signupForm">
+            <div class="form-group">
+              <label class="form-label" for="signupName">Full Name</label>
+              <div class="input-shell">
+                <input
+                  id="signupName"
+                  type="text"
+                  placeholder="Enter your full name"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signupEmail">Email</label>
+              <div class="input-shell">
+                <input
+                  id="signupEmail"
+                  type="email"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="signupPassword">Password</label>
+              <div class="input-shell">
+                <input
+                  id="signupPassword"
+                  type="password"
+                  placeholder="Enter your password"
+                  required
+                />
+              </div>
+            </div>
+
+            <div id="signupError" style="color:#dc2626; font-size:12px; margin-bottom:8px;"></div>
+
+            <button type="submit" class="btn btn-primary">
+              Sign Up
             </button>
-            <p class="auth-footer-text">
-              Already have an account?
-              <a class="link" href="index.html">Log In</a>
-            </p>
-          </div>
+          </form>
+
+          <p class="auth-footer-text" style="text-align:center;">
+            Already have an account?
+            <a href="index.html" class="link">Log In</a>
+          </p>
         </div>
       </div>
     </main>
@@ -47,8 +86,5 @@
   <script src="js/firebase-config.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/app.js"></script>
-  <script>
-    requireAuth();
-  </script>
 </body>
 </html>
