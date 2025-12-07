@@ -1,51 +1,43 @@
 // js/auth.js
 
-// Simple email format check (front-end cannot 100% prove an email exists)
+// ---------- Helpers ----------
 function isValidEmail(email) {
   const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return pattern.test(email);
 }
 
-// Save user profile in Firestore
-async function saveUser(user, extraName) {
+async function saveUserProfile(user, nameOverride) {
   const ref = db.collection("users").doc(user.uid);
   const snap = await ref.get();
 
   if (!snap.exists) {
     await ref.set({
       uid: user.uid,
-      name: extraName || user.displayName || "",
+      name: nameOverride || user.displayName || "",
       email: user.email,
       createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
   }
 }
 
-// ---------- SIGN UP WITH EMAIL & PASSWORD ----------
+// ---------- SIGN UP ----------
 async function handleSignup(event) {
   event.preventDefault();
 
-  const nameEl = document.getElementById("signupName");
-  const emailEl = document.getElementById("signupEmail");
-  const passEl = document.getElementById("signupPassword");
+  const name = document.getElementById("signupName").value.trim();
+  const email = document.getElementById("signupEmail").value.trim();
+  const password = document.getElementById("signupPassword").value;
   const errorBox = document.getElementById("signupError");
-
-  const name = nameEl.value.trim();
-  const email = emailEl.value.trim();
-  const password = passEl.value;
-
   errorBox.textContent = "";
 
   if (!name) {
     errorBox.textContent = "Please enter your full name.";
     return;
   }
-
   if (!isValidEmail(email)) {
     errorBox.textContent = "Please enter a valid email address.";
     return;
   }
-
   if (password.length < 6) {
     errorBox.textContent = "Password must be at least 6 characters.";
     return;
@@ -54,34 +46,29 @@ async function handleSignup(event) {
   try {
     const cred = await auth.createUserWithEmailAndPassword(email, password);
     await cred.user.updateProfile({ displayName: name });
-    await saveUser(cred.user, name);
+    await saveUserProfile(cred.user, name);
 
-    // logged in → go to home
     window.location.href = "home.html";
   } catch (err) {
     console.error(err);
-    errorBox.textContent = err.message || "Signup failed. Try again.";
+    // common error if Email/Password is not enabled in Firebase
+    errorBox.textContent = err.message || "Signup failed. Please try again.";
   }
 }
 
-// ---------- LOGIN WITH EMAIL & PASSWORD ----------
+// ---------- LOGIN ----------
 async function handleLogin(event) {
   event.preventDefault();
 
-  const emailEl = document.getElementById("loginEmail");
-  const passEl = document.getElementById("loginPassword");
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
   const errorBox = document.getElementById("loginError");
-
-  const email = emailEl.value.trim();
-  const password = passEl.value;
-
   errorBox.textContent = "";
 
   if (!isValidEmail(email)) {
     errorBox.textContent = "Please enter a valid email address.";
     return;
   }
-
   if (!password) {
     errorBox.textContent = "Please enter your password.";
     return;
@@ -89,7 +76,7 @@ async function handleLogin(event) {
 
   try {
     const cred = await auth.signInWithEmailAndPassword(email, password);
-    await saveUser(cred.user);
+    await saveUserProfile(cred.user);
 
     window.location.href = "home.html";
   } catch (err) {
@@ -99,24 +86,28 @@ async function handleLogin(event) {
 }
 
 // ---------- AUTH GUARD ----------
-function requireAuth() {
+function setupAuthGuard() {
   auth.onAuthStateChanged((user) => {
     const path = window.location.pathname;
     const page = path.substring(path.lastIndexOf("/") + 1) || "index.html";
+    const isAuthPage = (page === "index.html" || page === "signup.html" || page === "");
 
-    if (!user) {
-      // Not logged in → kick out of all pages except login/signup
-      if (page !== "index.html" && page !== "signup.html") {
-        window.location.href = "index.html";
-      }
-    } else {
-      // Already logged in but on auth pages → send to home
-      if (page === "index.html" || page === "signup.html") {
-        window.location.href = "home.html";
-      }
+    if (!user && !isAuthPage) {
+      // not logged in, trying to access protected page
+      window.location.href = "index.html";
+      return;
+    }
 
-      const emailEl = document.getElementById("currentUserEmail");
-      if (emailEl) emailEl.textContent = user.email;
+    if (user && isAuthPage) {
+      // logged in but on login/signup → send to home
+      window.location.href = "home.html";
+      return;
+    }
+
+    // show email in header if there's a slot for it
+    const emailEl = document.getElementById("currentUserEmail");
+    if (emailEl && user) {
+      emailEl.textContent = user.email;
     }
   });
 }
@@ -132,9 +123,10 @@ function setupLogout() {
   });
 }
 
-// ---------- INIT LISTENERS ----------
+// ---------- Init per page ----------
 document.addEventListener("DOMContentLoaded", () => {
   setupLogout();
+  setupAuthGuard();
 
   const loginForm = document.getElementById("loginForm");
   if (loginForm) {
@@ -145,7 +137,4 @@ document.addEventListener("DOMContentLoaded", () => {
   if (signupForm) {
     signupForm.addEventListener("submit", handleSignup);
   }
-
-  // Start auth guard on every page
-  requireAuth();
 });
